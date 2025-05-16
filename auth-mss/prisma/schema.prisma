@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["auth"] 
+}
+
+model user {
+  id         Int      @id @default(autoincrement()) @map("id")
+  email      String   @unique                       @map("email")
+  password   String                                 @map("password")
+  createdAt  DateTime @default(now())               @map("created_at")
+  updatedAt  DateTime @updatedAt                    @map("updated_at")
+  profile    profile?
+
+  @@schema("auth")
+  @@map("user") 
+}
+
+model profile {
+  id        Int      @id @default(autoincrement())
+  name      String
+  avatar    String?
+  userId    Int      @unique                        @map("user_id")
+  user      user     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())                @map("created_at")
+  updatedAt DateTime @updatedAt                     @map("updated_at")
+
+  @@schema("auth")
+  @@map("profile") 
+}

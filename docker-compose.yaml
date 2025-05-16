@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  postgres_auth:
+    image: postgres:15
+    container_name: auth-db
+    environment:
+      POSTGRES_DB: mss_auth
+      POSTGRES_USER: auth
+      POSTGRES_PASSWORD: auth123.
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_auth:/var/lib/postgresql/data
+      - ./init_auth.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - backend
+
+  postgres_post:
+    image: postgres:15
+    container_name: post-db
+    environment:
+      POSTGRES_DB: mss_post
+      POSTGRES_USER: post
+      POSTGRES_PASSWORD: post123.
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata_post:/var/lib/postgresql/data
+      - ./init_posts.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - backend
+
+  auth_service:
+    build: ./auth-mss
+    container_name: auth_mss
+    depends_on:
+      - postgres_auth
+    environment:
+      DATABASE_URL: postgres://auth:auth123.@postgres_auth:5432/mss_auth
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+
+  post_service:
+    build: ./posts-mss
+    container_name: posts-service
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgres://post:post123.@postgres_post:5432/mss_post
+    depends_on:
+      - postgres_post
+    networks:
+      - backend
+      
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  pgdata_auth:
+  pgdata_post:
+

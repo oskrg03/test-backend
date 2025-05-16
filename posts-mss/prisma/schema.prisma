@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["post"] 
+}
+
+model post {
+  id        Int      @id @default(autoincrement())
+  content   String
+  userId    Int                               @map("user_id")
+  createdAt DateTime @default(now())          @map("created_at")
+  updatedAt DateTime @updatedAt               @map("updated_at")
+  likes     like[]
+  @@map("post")
+  @@schema("post")
+}
+
+model like {
+  id        Int      @id @default(autoincrement())
+  userId    Int                                                     @map("user_id")
+  postId    Int                                                     @map("post_id")
+  createdAt DateTime @default(now())                                @map("created_at")
+  post      post     @relation(fields: [postId], references: [id])
+  @@map("like")
+  @@schema("post")
+}
