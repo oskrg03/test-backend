@@ -26,6 +26,8 @@ model like {
   postId    Int                                                     @map("post_id")
   createdAt DateTime @default(now())                                @map("created_at")
   post      post     @relation(fields: [postId], references: [id])
+
+  @@unique([postId, userId])
   @@map("like")
   @@schema("post")
 }

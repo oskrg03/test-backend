@@ -6,22 +6,42 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class LikesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async likePost(postId: number, userId: number) {
     try {
-      return await this.prisma.like.create({
-        data: {
-          postId,
-          userId,
+      const existingLike = await this.prisma.like.findUnique({
+        where: {
+          postId_userId: {
+            postId,
+            userId,
+          },
         },
       });
-    } catch (error) {
-        console.log(error);
-        
-      if (error.code === 'P2002') {
-        throw new ConflictException('Ya diste like a este post');
+
+      if (existingLike) {
+        // Si ya existe el like, lo elimina (toggle off)
+        await this.prisma.like.delete({
+          where: {
+            postId_userId: {
+              postId,
+              userId,
+            },
+          },
+        });
+        return true;
+      } else {
+        // Si no existe, lo crea (toggle on)
+        await this.prisma.like.create({
+          data: {
+            postId,
+            userId,
+          },
+        });
+        return true;
       }
+    } catch (error) {
+      console.log(error);
       throw error;
     }
   }

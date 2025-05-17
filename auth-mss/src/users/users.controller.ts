@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
@@ -9,7 +10,7 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('users')
 @ApiBearerAuth()
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor(private userService: UsersService) { }
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
   getProfile(@Request() req) {

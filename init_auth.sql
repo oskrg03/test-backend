@@ -63,9 +63,35 @@ CREATE TABLE IF NOT EXISTS auth.profile (
 
 -- Insertar usuario de prueba
 INSERT INTO auth.user (email, password)
-VALUES ('admin@correo.com', '$2b$10$rSJe7yo54WU7LY1mv/ORgew8cRMim/sbMmLJhRRtx075Y6IQs9HJK')
+VALUES 
+  ('admin@correo.com', '$2b$10$rSJe7yo54WU7LY1mv/ORgew8cRMim/sbMmLJhRRtx075Y6IQs9HJK'),
+  ('admin2@correo.com', '$2b$10$rSJe7yo54WU7LY1mv/ORgew8cRMim/sbMmLJhRRtx075Y6IQs9HJK'),
+  ('admin3@correo.com', '$2b$10$rSJe7yo54WU7LY1mv/ORgew8cRMim/sbMmLJhRRtx075Y6IQs9HJK'),
+  ('admin4@correo.com', '$2b$10$rSJe7yo54WU7LY1mv/ORgew8cRMim/sbMmLJhRRtx075Y6IQs9HJK'),
+  ('admin5@correo.com', '$2b$10$rSJe7yo54WU7LY1mv/ORgew8cRMim/sbMmLJhRRtx075Y6IQs9HJK'),
+  ('admin6@correo.com', '$2b$10$rSJe7yo54WU7LY1mv/ORgew8cRMim/sbMmLJhRRtx075Y6IQs9HJK')
 ON CONFLICT (email) DO NOTHING;
 
 INSERT INTO auth.profile (name, avatar, user_id)
 SELECT 'Test User', 'https://i.imgur.com/avatar.png', id FROM auth."user" WHERE email = 'admin@correo.com'
+ON CONFLICT (user_id) DO NOTHING;
+
+INSERT INTO auth.profile (name, avatar, user_id)
+SELECT 'Test User 2', 'https://i.imgur.com/avatar.png', id FROM auth."user" WHERE email = 'admin2@correo.com'
+ON CONFLICT (user_id) DO NOTHING;
+
+INSERT INTO auth.profile (name, avatar, user_id)
+SELECT 'Test User 3', 'https://i.imgur.com/avatar.png', id FROM auth."user" WHERE email = 'admin3@correo.com'
+ON CONFLICT (user_id) DO NOTHING;
+
+INSERT INTO auth.profile (name, avatar, user_id)
+SELECT 'Test User 4', 'https://i.imgur.com/avatar.png', id FROM auth."user" WHERE email = 'admin4@correo.com'
+ON CONFLICT (user_id) DO NOTHING;
+
+INSERT INTO auth.profile (name, avatar, user_id)
+SELECT 'Test User 5', 'https://i.imgur.com/avatar.png', id FROM auth."user" WHERE email = 'admin5@correo.com'
+ON CONFLICT (user_id) DO NOTHING;
+
+INSERT INTO auth.profile (name, avatar, user_id)
+SELECT 'Test User 5', 'https://i.imgur.com/avatar.png', id FROM auth."user" WHERE email = 'admin6@correo.com'
 ON CONFLICT (user_id) DO NOTHING;
